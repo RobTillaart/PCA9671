@@ -51,7 +51,7 @@ public:
 
   //       READ
   uint16_t read16();
-  uint8_t  read(uint8_- pin);
+  uint8_t  read(const uint8_t pin);
   uint16_t value();
 
 
