@@ -52,7 +52,7 @@ unittest(test_constructor)
 {
   PCA9671 pca(64);
 
-  assertEqual(acd.getAddress(), 64);
+  assertEqual(pca.getAddress(), 64);
 }
 
 
