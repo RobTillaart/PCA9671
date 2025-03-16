@@ -34,25 +34,54 @@ unittest_setup()
 }
 
 
-unittest_teardown()
-{
-}
-
 
 unittest(test_constants)
 {
+  assertEqual(PCA9671_INITIAL_VALUE, 0xFFFF);
   assertEqual(PCA9671_OK           , 0x00);
-  assertEqual(PCA9671_CRC_ERROR    , 0x01);
-  assertEqual(PCA9671_NOT_READY    , 0x10);
-  assertEqual(PCA9671_REQUEST_ERROR, 0x11);
+  assertEqual(PCA9671_PIN_ERROR    , 0x81);
+  assertEqual(PCA9671_I2C_ERROR    , 0x82);
 }
 
 
-unittest(test_constructor)
+unittest(test_begin)
 {
-  PCA9671 pca(64);
+  PCA9671 PCA(0x38);
 
-  assertEqual(pca.getAddress(), 64);
+  Wire.begin();
+  PCA.begin();
+
+  int readValue = PCA.read16();
+  assertEqual(0, readValue);
+
+  int I2Cerror = PCA9671_I2C_ERROR;
+  assertEqual(I2Cerror, PCA.lastError());
+}
+
+
+unittest(test_read)
+{
+  PCA9671 PCA(0x38);
+  int readValue;
+
+  Wire.begin();
+
+  PCA.begin();
+  for (int i = 0; i < 8; i++)
+  {
+    fprintf(stderr, "line %d\n", i);
+    readValue = PCA.read(i);
+    assertEqual(0, readValue);
+
+    int I2Cerror = PCA9671_I2C_ERROR;
+    assertEqual(I2Cerror, PCA.lastError());
+  }
+
+  fprintf(stderr, "test PCA9671_PIN_ERROR\n");
+  readValue = PCA.read(16);
+  assertEqual(0, readValue);
+  int PINerror = PCA9671_PIN_ERROR;
+  assertEqual(PINerror, PCA.lastError());
 }
 
 

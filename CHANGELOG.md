@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ## [0.1.0] - 2025-03-16
-- initial version
+
+- initial version based upon PCF8575 library.
 
 
 
