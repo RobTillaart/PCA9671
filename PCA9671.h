@@ -46,7 +46,6 @@ private:
 
   int      _command(uint8_t * arr, uint8_t size);
   int      _request(uint8_t * arr, uint8_t size);
-  uint8_t  _crc8(uint8_t * arr, uint8_t size);
 
   uint8_t  _error;
 };

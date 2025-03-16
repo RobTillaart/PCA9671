@@ -1,14 +1,14 @@
 //
 //    FILE: PCA9671.cpp
 //  AUTHOR: Rob Tillaart
-//    DATE: 2025-xx-xx
+//    DATE: 2025-03-16
 // VERSION: 0.1.0
 // PURPOSE: Arduino library for the PCA9671, I2C 16-bit I/O expander
 //     URL: https://github.com/RobTillaart/PCA9671
 
 
 
-#include "_template.h"
+#include "PCA9671.h"
 
 
 PCA9671::PCA9671(uint8_t address, TwoWire *wire)
@@ -16,12 +16,6 @@ PCA9671::PCA9671(uint8_t address, TwoWire *wire)
   _address = address;
   _wire = wire;
   _error = 0;
-  _lastRead = 0;
-  _concentration = 0;
-  _temperature = 0;
-  _preHeatStart = millis();
-  _requestTime = 80;
-  _requestStart = 0;
 }
 
 
@@ -29,11 +23,6 @@ bool PCA9671::begin()
 {
   //  reset variables
   _error = 0;
-  _lastRead = 0;
-  _concentration = 0;
-  _temperature = 0;
-  _requestTime = 80;
-  _requestStart = 0;
 
   if (! isConnected())
   {
@@ -114,29 +103,6 @@ int PCA9671::_request(uint8_t * arr, uint8_t size)
   }
   _error = 0;
   return _error;
-}
-
-
-uint8_t PCA9671::_crc8(uint8_t * arr, uint8_t size)
-{
-  uint8_t crc = 0xFF;
-  for (uint8_t b = 0; b < size; b++)
-  {
-    crc ^= arr[b];
-    for (uint8_t bit = 0x80; bit; bit >>= 1)
-    {
-      if (crc & 0x80)
-      {
-        crc <<= 1;
-        crc ^= 0x31;
-      }
-      else
-      {
-        crc <<= 1;
-      }
-    }
-  }
-  return crc;
 }
 
 
