@@ -79,13 +79,15 @@ public:
   void     reverse();
 
 
+  //       SELECT
   void     select(const uint8_t pin);
   void     selectN(const uint8_t pin);
   void     selectNone();
   void     selectAll();
 
-  //       DEBUG
+  //       MISCELLANEOUS
   int      lastError();
+  uint32_t deviceID();
 
 
 private:

@@ -26,6 +26,7 @@ The PCA9671 can have 64 I2C addresses, see datasheet.
 
 The PCA9671 does not have an interrupt pin, but a reset pin.
 This external reset pin is not (yet) supported by the library.
+Note: hardware pin 1 == interrupt (OUT) or reset (IN).
 
 Having 64 devices on one I2C bus would allow you to connect up to
 64 x 16 = 1024 IO lines.
@@ -47,33 +48,37 @@ Based upon data sheets.
 |  address    |    64     |     8     |
 |  max I2C    |   1 MHz   |  400 KHz  |
 |  interrupt  |     N     |     Y     |
-|  reset      |     Y     |     N     |
+|  reset-pin  |     Y     |     N     |
+|  SW-reset   |     Y     |     N     |
+|  deviceID   |     Y     |     N     |
 |             |           |           |
 
+The library does not support the SW-reset and deviceID calls.
 
 
 ### Related
 
 16 bit port expanders
 
-- https://github.com/RobTillaart/MCP23017_RT  I2C 16 IO LINES
-- https://github.com/RobTillaart/MCP23S17  SPI 16 IO LINES
-- https://github.com/RobTillaart/PCF8575  I2C 16 IO LINES
-- https://github.com/RobTillaart/PCA9671  I2C 16 IO LINES - successor PCF8575
+- https://github.com/RobTillaart/MCP23017_RT  I2C 16 IO lines.
+- https://github.com/RobTillaart/MCP23S17  SPI 16 IO lines.
+- https://github.com/RobTillaart/PCF8575  I2C 16 IO lines.
+- https://github.com/RobTillaart/PCA9671  I2C 16 IO lines. - successor PCF8575
 
 
 8 bit port expanders
 
-- https://github.com/RobTillaart/MCP23008  I2C 8 IO lines
-- https://github.com/RobTillaart/MCP23S08  SPI 8 IO lines
-- https://github.com/RobTillaart/PCF8574  I2C 8 IO lines
+- https://github.com/RobTillaart/MCP23008  I2C 8 IO lines.
+- https://github.com/RobTillaart/MCP23S08  SPI 8 IO lines.
+- https://github.com/RobTillaart/PCF8574  I2C 8 IO lines.
 
 
 ## I2C
 
 The device has 64 possible addresses.
 
-See datasheet.
+See datasheet page 6, 7.1.1 Address maps.
+
 
 ### Performance
 
@@ -95,6 +100,29 @@ Also note that switching between channels will slow down other devices
 too if they are behind the multiplexer.
 
 - https://github.com/RobTillaart/TCA9548
+
+
+## Reset
+
+The PCA9671 has a RESET pin (pin 1) to reset the device to power on state.
+The RESET can de-align the internal state so be aware you might need to 
+call e.g. **read16()** or **select()** after reset.
+
+
+### Software Reset Call
+
+All PCA9671's on an I2C bus will respond to the **Software Reset Call** 
+(SWRST = 0x0006). So they will react if a SWRST is sent to other devices too.
+Details see data sheet, page 9.
+
+TODO: test SWRST with https://github.com/RobTillaart/I2C_SCANNER
+
+
+## Device ID
+
+**Experimental**
+
+TODO: test with hardware.
 
 
 ## Interface
@@ -129,7 +157,7 @@ Returns true if address can be found on I2C bus.
 - **uint8_t read(uint8_t pin)** reads a single pin; pin = 0..15.
 - **uint16_t value()** returns the last read inputs again, as this information is buffered 
 in the class this is faster than reread the pins.
-- **void write16(uint16_t value)** writes all 16 pins at once. This one does the actual reading.
+- **void write16(uint16_t value)** writes all 16 pins at once. This one does the actual writing.
 - **void write(uint8_t pin, uint8_t value)** writes a single pin; pin = 0..15; value is HIGH(1) or LOW (0).
 - **uint16_t valueOut()** returns the last written data.
 
@@ -180,6 +208,21 @@ This can typical be used to implement a VU meter.
 ### Miscellaneous
 
 - **int lastError()** returns the last error from the lib. (see .h file).
+
+
+### DeviceID
+
+- **uint32_t deviceID()** experimental. Datasheet page 10.
+Returns 24 bits
+
+|   bits   |  meaning       |  notes  |
+|:--------:|:---------------|:--------|
+|  00..02  |  Revision      |
+|  03..08  |  Feature       |  datasheet uses P and F
+|  09..15  |  Category      |
+|  16..23  |  Manufacturer  |  no details known
+
+
 
 
 ## Error codes

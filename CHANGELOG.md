@@ -8,7 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.1.1] - 2025-03-18
 
-- fix #2, examples
+- fix #2, fix examples
+- remove address range check from getAddress()
+- add experimental uint32_t deviceID() + example.
 - minor edits
 
 
