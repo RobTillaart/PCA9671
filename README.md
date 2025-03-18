@@ -38,14 +38,18 @@ Not tested with hardware yet.
 Feedback as always is welcome.
 
 
-### Comparison PCF8575
+### Comparison PCA9671 vs PCF8575
 
 Based upon data sheets.
 
-|  device   |  address  |  max I2C  |  interrupt  |  reset  |
-|:---------:|:---------:|:---------:|:-----------:|:-------:|
-|  PCF8575  |    8      |  400 KHz  |     Y       |    N    |
-|  PCA9671  |    64     |    1 MHz  |     N       |    Y    |
+|             |  PCA9671  |  PCF8575  |
+|:------------|:---------:|:---------:|
+|  address    |    64     |     8     |
+|  max I2C    |   1 MHz   |  400 KHz  |
+|  interrupt  |     N     |     Y     |
+|  reset      |     Y     |     N     |
+|             |           |           |
+
 
 
 ### Related
