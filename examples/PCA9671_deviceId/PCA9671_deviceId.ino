@@ -4,7 +4,8 @@
 // PURPOSE: demo get DeviceID
 //     URL: https://github.com/RobTillaart/PCA9671
 //
-//  EXPERIMENTAL
+//  EXPERIMENTAL as deviceID() is not working yet
+
 
 #include "PCA9671.h"
 

@@ -1,5 +1,5 @@
 //
-//    FILE: PCA9671_test.ino
+//    FILE: test1.ino
 //  AUTHOR: Rob Tillaart
 // PURPOSE: demo
 //     URL: https://github.com/RobTillaart/PCA9671

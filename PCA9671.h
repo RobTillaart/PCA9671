@@ -87,6 +87,8 @@ public:
 
   //       MISCELLANEOUS
   int      lastError();
+
+  //  TODO get deviceID() working
   uint32_t deviceID();
 
 
@@ -98,6 +100,17 @@ private:
   int      _error;
 
   TwoWire*  _wire;
+};
+
+
+////////////////////////////////////////////////////////
+//
+//  DERIVED PCA9673
+//
+class PCA9673 : public PCA9671
+{
+public:
+  PCA9673(uint8_t address, TwoWire *wire = &Wire);
 };
 
 

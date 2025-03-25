@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 - fix #2, fix examples
 - remove address range check from getAddress()
-- add experimental uint32_t deviceID() + example.
+- add PCA9673 as derived class.
 - minor edits
 
 

@@ -34,26 +34,32 @@ Having 64 devices on one I2C bus would allow you to connect up to
 The library allows to read and write both single pins or 16 pins at once.
 Furthermore some additional functions are implemented that are playful and useful.
 
-Not tested with hardware yet.
+The library should work with the PCA9673 device, which is nearly identical.
+The difference is it has an INTerrupt pin instead of address pin 2,
+and thus less addresses.
+
+Warning: Not all functionality is tested with hardware, so use with care.
 
 Feedback as always is welcome.
 
 
-### Comparison PCA9671 vs PCF8575
+### Comparison PCF8575, PCA9671 and PCA9673
 
 Based upon data sheets.
 
-|             |  PCA9671  |  PCF8575  |
-|:------------|:---------:|:---------:|
-|  address    |    64     |     8     |
-|  max I2C    |   1 MHz   |  400 KHz  |
-|  interrupt  |     N     |     Y     |
-|  reset-pin  |     Y     |     N     |
-|  SW-reset   |     Y     |     N     |
-|  deviceID   |     Y     |     N     |
-|             |           |           |
+|             |  PCF8575  |  PCA9671  |  PCA9673  |  Notes  |
+|:------------|:---------:|:---------:|:---------:|:-------:|
+|  address    |     8     |    64     |    16     |
+|  max I2C    |  400 KHz  |   1 MHz   |   1 MHz   |
+|  interrupt  |     Y     |     N     |     Y     |
+|  reset-pin  |     N     |     Y     |     Y     |
+|  SW-reset   |     N     |     Y     |     Y     |
+|  deviceID   |     N     |     Y     |     Y     |  not working yet
+|             |           |           |           |
 
-The library does not support the SW-reset and deviceID calls.
+The library does not implement the SW-reset call, see sections below.
+
+The deviceID call is under investigation how to get it to work.
 
 
 ### Related
@@ -105,6 +111,10 @@ too if they are behind the multiplexer.
 ## Reset
 
 The PCA9671 has a RESET pin (pin 1) to reset the device to power on state.
+
+To reset the device one needs to set the RESET pin LOW for at least 4 us.
+The reset process itself takes about 100us, see datasheet page 20 and fig 22.
+
 The RESET can de-align the internal state so be aware you might need to 
 call e.g. **read16()** or **select()** after reset.
 
@@ -140,6 +150,7 @@ the include of "PCA9671.h" to overrule the default value used with the
 
 - **PCA9671(uint8_t deviceAddress, TwoWire \*wire = &Wire)** Constructor with the optional 
 I2C device address, default 0x20, and the optional Wire interface as parameter.
+- **PCA9673(uint8_t deviceAddress, TwoWire \*wire = &Wire)** Constructor.
 - **bool begin(uint8_t value = PCA9671_INITIAL_VALUE)** set the initial value for the pins and masks.
 Returns true if device address is visible on the I2C bus.
 - **bool isConnected()** checks if the address is visible on the I2C bus.
@@ -212,8 +223,8 @@ This can typical be used to implement a VU meter.
 
 ### DeviceID
 
-- **uint32_t deviceID()** experimental. Datasheet page 10.
-Returns 24 bits
+- **uint32_t deviceID()** experimental (not working yet). Datasheet page 10.
+Returns 24 bits, see table.
 
 |   bits   |  meaning       |  notes  |
 |:--------:|:---------------|:--------|
@@ -222,7 +233,11 @@ Returns 24 bits
 |  09..15  |  Category      |
 |  16..23  |  Manufacturer  |  no details known
 
+This function is under investigation to get it working.
+For now the function is hardcoded to return 0xFFFFFFFF.
+Failing test code is commented in cpp file.
 
+Feedback / solutions welcome.
 
 
 ## Error codes

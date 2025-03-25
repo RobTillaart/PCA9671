@@ -271,30 +271,50 @@ int PCA9671::lastError()
 }
 
 
+//  TODO get this working
 uint32_t PCA9671::deviceID()
 {
-  uint8_t DEVICEID_ADDRESS = 0x7C;
-  _wire->beginTransmission(DEVICEID_ADDRESS);
-  _wire->write(_address);                  //  address of the PCA9671
-  _error = _wire->endTransmission(false);  //  explicit send a restart.
-  if (_error != 0)
-  {
-    _error = PCA9671_I2C_ERROR;
-    return 0xFFFFFFFF;
-  }
-  if (_wire->requestFrom(DEVICEID_ADDRESS, (uint8_t)3) != 3)
-  {
-    _error = PCA9671_I2C_ERROR;
-    return 0xFFFFFFFF;
-  }
-  _error = PCA9671_OK;
-  uint32_t deviceId = _wire->read();
-  deviceId <<= 8;
-  deviceId |= _wire->read();
-  deviceId <<= 8;
-  deviceId |= _wire->read();
-  return deviceId;
+  return -1;
 }
+//  not working code
+// uint32_t PCA9671::deviceID()
+// {
+  // uint8_t DEVICEID_ADDRESS = 0x7C;
+  // _wire->beginTransmission(DEVICEID_ADDRESS);
+  // _wire->write(_address);                  //  address of the PCA9671
+  // _error = _wire->endTransmission(false);  //  explicit send a restart.
+  // if (_error != 0)
+  // {
+    // _error = PCA9671_I2C_ERROR;
+    // return 0xFFFFFFFF;
+  // }
+  // if (_wire->requestFrom(DEVICEID_ADDRESS, (uint8_t)3) != 3)
+  // {
+    // _error = PCA9671_I2C_ERROR;
+    // return 0xFFFFFFFF;
+  // }
+  // _error = PCA9671_OK;
+  // uint32_t deviceId = _wire->read();
+  // deviceId <<= 8;
+  // deviceId |= _wire->read();
+  // deviceId <<= 8;
+  // deviceId |= _wire->read();
+  // return deviceId;
+// }
+
+
+
+////////////////////////////////////////////////////////
+//
+//  DERIVED PCA9673
+//
+PCA9673::PCA9673(uint8_t address, TwoWire *wire = &Wire)
+        :PCA9671(address, wire)
+{
+  //  identical for now
+  //  PCA9673 has intererupt pin.
+}
+
 
 
 //  -- END OF FILE --
