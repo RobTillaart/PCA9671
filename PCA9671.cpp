@@ -308,7 +308,7 @@ uint32_t PCA9671::deviceID()
 //
 //  DERIVED PCA9673
 //
-PCA9673::PCA9673(uint8_t address, TwoWire *wire = &Wire)
+PCA9673::PCA9673(uint8_t address, TwoWire *wire)
         :PCA9671(address, wire)
 {
   //  identical for now
