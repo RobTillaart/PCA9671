@@ -53,13 +53,11 @@ Based upon data sheets.
 |  max I2C    |  400 KHz  |   1 MHz   |   1 MHz   |
 |  interrupt  |     Y     |     N     |     Y     |
 |  reset-pin  |     N     |     Y     |     Y     |
-|  SW-reset   |     N     |     Y     |     Y     |
-|  deviceID   |     N     |     Y     |     Y     |  not working yet
+|  SW-reset   |     N     |     Y     |     Y     |  see section below.
+|  deviceID   |     N     |     Y     |     Y     |  see section below.
 |             |           |           |           |
 
-The library does not implement the SW-reset call, see sections below.
-
-The deviceID call is under investigation how to get it to work.
+The library does not implement the SW-reset call.
 
 
 ### Related
@@ -126,13 +124,6 @@ All PCA9671's on an I2C bus will respond to the **Software Reset Call**
 Details see data sheet, page 9.
 
 TODO: test SWRST with https://github.com/RobTillaart/I2C_SCANNER
-
-
-## Device ID
-
-**Experimental**
-
-TODO: test with hardware.
 
 
 ## Interface
@@ -223,8 +214,10 @@ This can typical be used to implement a VU meter.
 
 ### DeviceID
 
-- **uint32_t deviceID()** experimental (not working yet). Datasheet page 10.
-Returns 24 bits, see table.
+- **uint32_t deviceID()** experimental. Datasheet page 10.
+Returns 24 bits, see table or 0xFFFFFFFF (-1) on error.
+
+Use **PCA9671_deviceId.ino** to see how to split the fields.
 
 |   bits   |  meaning       |  notes  |
 |:--------:|:---------------|:--------|
@@ -233,15 +226,19 @@ Returns 24 bits, see table.
 |  09..15  |  Category      |
 |  16..23  |  Manufacturer  |  no details known
 
-This function is under investigation to get it working.
-For now the function is hardcoded to return 0xFFFFFFFF.
-Failing test code is commented in cpp file.
+The first and only test gave the following output,
 
-Feedback / solutions welcome.
+```
+Manufacturer = 0x00  (NXP?)
+Category     = 0x01
+Feature      = 0x20  (== address?, coincidence?)
+Revision     = 0x00
+```
+
+There is no info how to interpret the bits further (yet), feedback welcome.
 
 
 ## Error codes
-
 
 |  name               |  value  |  description              |
 |:--------------------|:-------:|:--------------------------|
