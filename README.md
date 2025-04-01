@@ -18,20 +18,25 @@ Arduino library for the PCA9671 and PCA9673, I2C 16-bit I/O expander.
 
 **Experimental**
 
-The library gives easy control over the 16 pins of the PCA9671 chips.
-It is a replacement product for the PCF8575, so this library is based
-upon the PCF8575 library to make replacement as easy as possible.
+The library gives easy control over the 16 pins of the PCA9671 devices.
+The PCA9671 is a replacement product for the PCF8575, so this library is based
+upon the PCF8575 library to make the transition as easy as possible.
 
-The PCA9671 can have 64 I2C addresses, see datasheet.
+The PCA9671 can have 64 I2C addresses, see datasheet how to connect.
 
-The PCA9671 does not have an interrupt pin, but a reset pin.
-This external reset pin is not (yet) supported by the library.
+The PCA9671 is not 100% compatible as it does not have an interrupt pin, 
+but a reset pin instead.
 Note: hardware pin 1 == interrupt (OUT) or reset (IN).
+The external reset pin is not (yet) supported by the library, use it with care.
+
 
 Having 64 devices on one I2C bus would allow you to connect up to
-64 x 16 = 1024 IO lines.
+64 x 16 = 1024 input or output lines. 
+Be aware that you might need an appropriate power supply to have all of them
+working properly.
 
-The library allows to read and write both single pins or 16 pins at once.
+The library allows to read and write both single pins or 16 pins in one call.
+Be aware that the 16 bits interface actually writes 2 times 8 pins.
 Furthermore some additional functions are implemented that are playful and useful.
 
 Warning: Not all functionality is tested with hardware, so use with care.
@@ -42,8 +47,11 @@ Feedback as always is welcome.
 ### PCA9673
 
 The library should work with the PCA9673 device, which is nearly identical.
-The difference is it has an INTerrupt pin instead of address pin 2,
-and thus less addresses.
+The difference is that the PCA9673 has both an interrupt pin AND a RESET pin. 
+What is missing is address pin 2, and thus it has less addresses. 
+
+So not 100% replacement compatible but close enough if one takes care of
+the interrupt an reset pins.
 
 
 ### Comparison PCF8575, PCA9671 and PCA9673
@@ -54,8 +62,8 @@ Based upon data sheets.
 |:------------|:---------:|:---------:|:---------:|:-------:|
 |  address    |     8     |    64     |    16     |
 |  max I2C    |  400 KHz  |   1 MHz   |   1 MHz   |
-|  interrupt  |     Y     |     N     |     Y     |
-|  reset-pin  |     N     |     Y     |     Y     |
+|  interrupt  |   Y (1)   |     N     |   Y (1)   |  (1) = pin nr
+|  reset-pin  |     N     |   Y (1)   |   Y (3)   |  (3) = pin nr
 |  SW-reset   |     N     |     Y     |     Y     |  see section below.
 |  deviceID   |     N     |     Y     |     Y     |  see section below.
 |             |           |           |           |
@@ -84,12 +92,25 @@ The library does not implement the SW-reset call.
 
 The device has 64 possible addresses.
 
-See datasheet page 6, 7.1.1 Address maps.
+See datasheet page 6, section 7.1.1 Address maps.
 
 
 ### Performance
 
-TODO:
+TODO: test to fill the table
+
+| clock speed |  Read  |  Write  |  Notes              |
+|:-----------:|:------:|:-------:|:--------------------|
+|    100000   |        |         |
+|    200000   |        |         |
+|    300000   |        |         |
+|    400000   |        |         |
+|    500000   |        |         |
+|    600000   |        |         |
+|    700000   |        |         |
+|    800000   |        |         |
+|    900000   |        |         |
+|   1000000   |        |         |
 
 
 ### I2C multiplexing
@@ -112,13 +133,16 @@ too if they are behind the multiplexer.
 
 ## Reset
 
-The PCA9671 has a RESET pin (pin 1) to reset the device to power on state.
+The PCA9671 and PCA9673 have a reset pin (pin 1 or 3) to reset the device 
+to power on state.
 
-To reset the device one needs to set the RESET pin LOW for at least 4 us.
+To reset the device one needs to set the reset pin LOW for at least 4 us.
 The reset process itself takes about 100us, see datasheet page 20 and fig 22.
 
-The RESET can de-align the internal state so be aware you might need to 
-call e.g. **read16()** or **select()** after reset.
+The reset can / will change the internal state of the device compared to the 
+(cached) inner state as hold by the library. 
+So you need to call e.g. **read16()** or **select()** after reset to restore
+the alignment of the inner states.
 
 
 ### Software Reset Call
@@ -128,6 +152,11 @@ All PCA9671's on an I2C bus will respond to the **Software Reset Call**
 Details see data sheet, page 9.
 
 TODO: test SWRST with https://github.com/RobTillaart/I2C_SCANNER
+
+The SWRST can / will change the internal state of the device compared to the 
+(cached) inner state as hold by the library. 
+So you need to call e.g. **read16()** or **select()** after reset to restore
+the alignment of the inner states.
 
 
 ## Interface
@@ -213,7 +242,7 @@ This can typical be used to implement a VU meter.
 
 ### Miscellaneous
 
-- **int lastError()** returns the last error from the lib. (see .h file).
+- **int lastError()** returns the last error from the library. (see .h file).
 
 
 ### DeviceID
