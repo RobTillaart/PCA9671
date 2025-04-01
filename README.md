@@ -11,7 +11,7 @@
 
 # PCA9671
 
-Arduino library for the PCA9671, I2C 16-bit I/O expander.
+Arduino library for the PCA9671 and PCA9673, I2C 16-bit I/O expander.
 
 
 ## Description
@@ -34,13 +34,16 @@ Having 64 devices on one I2C bus would allow you to connect up to
 The library allows to read and write both single pins or 16 pins at once.
 Furthermore some additional functions are implemented that are playful and useful.
 
-The library should work with the PCA9673 device, which is nearly identical.
-The difference is it has an INTerrupt pin instead of address pin 2,
-and thus less addresses.
-
 Warning: Not all functionality is tested with hardware, so use with care.
 
 Feedback as always is welcome.
+
+
+### PCA9673
+
+The library should work with the PCA9673 device, which is nearly identical.
+The difference is it has an INTerrupt pin instead of address pin 2,
+and thus less addresses.
 
 
 ### Comparison PCF8575, PCA9671 and PCA9673
@@ -87,6 +90,7 @@ See datasheet page 6, 7.1.1 Address maps.
 ### Performance
 
 TODO:
+
 
 ### I2C multiplexing
 
@@ -223,10 +227,10 @@ Use **PCA9671_deviceId.ino** to see how to split the fields.
 |:--------:|:---------------|:--------|
 |  00..02  |  Revision      |
 |  03..08  |  Feature       |  datasheet uses P and F
-|  09..15  |  Category      |
+|  09..15  |  Category      |  no details known
 |  16..23  |  Manufacturer  |  no details known
 
-The first and only test gave the following output,
+The first and only test gave the following output, (see #4).
 
 ```
 Manufacturer = 0x00  (NXP?)
@@ -253,6 +257,7 @@ There is no info how to interpret the bits further (yet), feedback welcome.
 
 - improve documentation
 - get hardware to test
+- test more platforms
 - keep in sync with PCF8575.
 
 #### Should

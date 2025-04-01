@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.1.2] - 2025-03-26
 - fix #4, investigate deviceID
-- TODO readme.md
+- update readme.md
 - minor edits
 
 ## [0.1.1] - 2025-03-18
