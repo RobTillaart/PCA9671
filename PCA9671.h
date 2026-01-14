@@ -3,7 +3,7 @@
 //    FILE: PCA9671.h
 //  AUTHOR: Rob Tillaart
 //    DATE: 2025-03-16
-// VERSION: 0.1.4
+// VERSION: 0.1.3
 // PURPOSE: Arduino library for the PCA9671 and PCA9673, I2C 16-bit I/O expander.
 //     URL: https://github.com/RobTillaart/PCA9671
 //          https://github.com/RobTillaart/PCF8575
